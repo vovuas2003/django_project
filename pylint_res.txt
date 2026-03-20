@@ -1,0 +1,12 @@
+************* Module core.admin
+core\admin.py:1:0: W0611: Unused admin imported from django.contrib (unused-import)
+************* Module core.models
+core\models.py:1:0: W0611: Unused models imported from django.db (unused-import)
+************* Module core.tests
+core\tests.py:1:0: W0611: Unused TestCase imported from django.test (unused-import)
+************* Module core.views
+core\views.py:1:0: W0611: Unused render imported from django.shortcuts (unused-import)
+
+------------------------------------------------------------------
+Your code has been rated at 8.95/10 (previous run: 8.95/10, +0.00)
+
