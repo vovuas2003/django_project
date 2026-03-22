@@ -2,6 +2,7 @@
 
 ## Запуск проекта (инструкция для Windows)
 
+0. Установите Python (я запускал на 3.12.2)
 1. Скачайте (склонируйте) репозиторий и зайдите в него из консоли (cmd)
 2. python -m venv .venv
 3. .venv\Scripts\activate
@@ -19,4 +20,4 @@
 
 Команда pylint_run.bat запустит pylint с нужными опциями, сохранит результат в файл pylint_res.txt и выведет его содержимое на экран. Выключены проверки C0114: Missing module docstring (missing-module-docstring) и C0115: Missing class docstring (missing-class-docstring), потому что при чистом старте Django проекта эти docstring не создаются. Структура проекта стандартизована (диктуется фреймворком), docstring для своего кода я создам при необходимости.
 
-Текущая оценка pylint: 9.38
+Текущая оценка pylint: 9.35

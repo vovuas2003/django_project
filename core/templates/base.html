@@ -34,6 +34,11 @@
                             <a class="nav-link" href="{% url 'profile' %}">Профиль</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'perfect_trend' %}">
+                                 <i class="bi bi-graph-up"></i> Прогресс
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
                         </li>
                     {% else %}

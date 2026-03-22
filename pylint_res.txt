@@ -4,7 +4,12 @@ core\admin.py:2:0: E5142: User model imported from django.contrib.auth.models (i
 core\models.py:2:0: E5142: User model imported from django.contrib.auth.models (imported-auth-user)
 ************* Module core.tests
 core\tests.py:1:0: W0611: Unused TestCase imported from django.test (unused-import)
+************* Module core.views
+core\views.py:288:0: C0301: Line too long (108/100) (line-too-long)
+core\views.py:17:0: C0413: Import "import matplotlib.pyplot as plt" should be placed at the top of the module (wrong-import-position)
+core\views.py:19:0: C0413: Import "from .models import UserProfile, TestResult" should be placed at the top of the module (wrong-import-position)
+core\views.py:237:0: R0914: Too many local variables (19/15) (too-many-locals)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.38/10 (previous run: 9.38/10, +0.00)
+Your code has been rated at 9.35/10 (previous run: 9.35/10, +0.00)
 

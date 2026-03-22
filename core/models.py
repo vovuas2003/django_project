@@ -32,3 +32,14 @@ class TestResult(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.score}/10 ({self.total_time_seconds} с)"
+
+    @classmethod
+    def get_perfect_times_for_user(cls, user):
+        """
+        Список (номер теста, время в секундах) для идеальных тестов
+        """
+        perfect_tests = cls.objects.filter(user=user, score=10).order_by('started_at')
+        return [
+            (i + 1, test.total_time_seconds)
+            for i, test in enumerate(perfect_tests)
+        ]
