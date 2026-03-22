@@ -1,19 +1,76 @@
 {% extends 'base.html' %}
-
 {% block title %}Профиль — MathMaster{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card p-4">
-            <h3 class="text-center mb-4">Мой профиль</h3>
-            <p><strong>Имя пользователя:</strong> {{ profile.user.username }}</p>
-            <p><strong>Присоединился:</strong> {{ profile.joined_at|date:"d.m.Y" }}</p>
+  <div class="col-md-8">
+    <div class="card p-4">
+      <h3 class="text-center mb-4">Мой профиль</h3>
 
-            <hr>
-            <a href="{% url 'password_change' %}" class="btn btn-outline-primary">Сменить пароль</a>
-            <a href="{% url 'logout' %}" class="btn btn-outline-danger">Выйти</a>
+      <p><strong>Имя пользователя:</strong> {{ profile.user.username }}</p>
+      <p><strong>Присоединился:</strong> {{ profile.joined_at|date:"d.m.Y" }}</p>
+
+      <hr>
+
+      <!-- Статистика (три карточки в ряд) -->
+      <div class="row text-center mb-4">
+        <div class="col-md-4">
+          <div class="badge bg-primary rounded-pill p-3 w-100">
+            <div class="fs-4 fw-bold">{{ total_tests }}</div>
+            <div class="small text-muted">Всего тестов</div>
+          </div>
         </div>
+        <div class="col-md-4">
+          <div class="badge bg-success rounded-pill p-3 w-100">
+            <div class="fs-4 fw-bold">{{ perfect_tests }}</div>
+            <div class="small text-muted">Идеальных (10/10)</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="badge bg-info rounded-pill p-3 w-100">
+            <div class="fs-4 fw-bold">{{ avg_time }}c</div>
+            <div class="small text-muted">Ср. время (идеал)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Последние результаты -->
+      <h5 class="mb-3">📊 Последние результаты</h5>
+      {% if recent_results %}
+        <ul class="list-group mb-4">
+          {% for result in recent_results %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>
+                {{ result.score }}/10 — {{ result.total_time_seconds }}c
+                <small class="text-muted">({{ result.started_at|date:"d.m.Y H:i" }})</small>
+              </span>
+              {% if result.is_perfect %}
+                <span class="badge bg-success">🏆</span>
+              {% elif result.score >= 8 %}
+                <span class="badge bg-warning">👍</span>
+              {% else %}
+                <span class="badge bg-secondary">🔄</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">Вы ещё не проходили тесты. Начните прямо сейчас!</p>
+      {% endif %}
+
+      <!-- Кнопки действий -->
+      <div class="d-grid gap-2">
+        <a href="{% url 'start_test' %}" class="btn btn-success btn-lg">🚀 Начать тест</a>
+        <a href="{% url 'test_results' %}" class="btn btn-outline-secondary">📋 Все результаты</a>
+        <a href="{% url 'leaderboard' %}" class="btn btn-outline-primary">🏆 Топ пользователей</a>
+      </div>
+
+      <!-- Смена пароля -->
+      <hr>
+      <div class="text-center mt-4">
+        <a href="{% url 'password_change' %}" class="btn btn-outline-primary">🔑 Сменить пароль</a>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}

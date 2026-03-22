@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Начать тест — MathMaster{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h3>🧠 Тест на устный счёт (10 вопросов)</h3>
+        <p class="text-muted">Решите 10 примеров на сложение двузначных чисел. Удачи!</p>
+      </div>
+      <div class="card-body">
+        <form method="post" action="{% url 'submit_test' %}">
+          {% csrf_token %}
+          {% for q in questions %}
+            <div class="mb-3">
+              <label class="form-label">
+                <strong>Вопрос {{ forloop.counter }}:</strong>
+                {{ q.a }} + {{ q.b }} = ?
+              </label>
+              <input type="number" name="answer_{{ forloop.counter0 }}" class="form-control" min="0" required>
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary">Отправить ответы</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

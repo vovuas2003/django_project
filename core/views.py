@@ -1,10 +1,15 @@
+import random
+#import json
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from .models import UserProfile
+#from django.http import JsonResponse
+from django.utils import timezone
+from django.db.models import Avg, Count, Min
+from .models import UserProfile, TestResult
 
 def home(request):
     """
@@ -57,10 +62,25 @@ def logout_view(request):
 @login_required
 def profile(request):
     """
-    Страница профиля
+    Страница профиля с статистикой
     """
     profile_to_render = request.user.userprofile
-    return render(request, 'profile.html', {'profile': profile_to_render})
+    total_tests = TestResult.objects.filter(user=request.user).count()
+    perfect_tests = TestResult.objects.filter(user=request.user, score=10).count()
+    avg_time = TestResult.objects.filter(user=request.user, score=10).aggregate(
+        avg=Avg('total_time_seconds')
+    )['avg'] or 0
+
+    # Последние 3 результата
+    recent_results = TestResult.objects.filter(user=request.user).order_by('-started_at')[:3]
+
+    return render(request, 'profile.html', {
+        'profile': profile_to_render,
+        'total_tests': total_tests,
+        'perfect_tests': perfect_tests,
+        'avg_time': round(avg_time, 1),
+        'recent_results': recent_results,
+    })
 
 @login_required
 def password_change(request):
@@ -77,3 +97,114 @@ def password_change(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'registration/password_change.html', {'form': form})
+
+@login_required
+def start_test(request):
+    """
+    Генерация 10 случайных примеров на сложение двузначных чисел
+    """
+    questions = []
+    correct_answers = []
+    for _ in range(10):
+        a = random.randint(10, 99)
+        b = random.randint(10, 99)
+        questions.append({"a": a, "b": b})
+        correct_answers.append(a + b)
+
+    # Сохраняем в сессии — только для текущей сессии, не в БД
+    request.session['test_questions'] = questions
+    request.session['test_correct_answers'] = correct_answers
+    request.session['test_started_at'] = timezone.now().isoformat()
+
+    return render(request, 'test/start.html', {
+        'questions': questions
+    })
+
+@login_required
+def submit_test(request):
+    """
+    Принимаем ответы пользователя и проверяем на сервере
+    """
+    if request.method != "POST":
+        return redirect('start_test')
+
+    # Получаем данные из сессии
+    questions = request.session.get('test_questions')
+    correct_answers = request.session.get('test_correct_answers')
+    started_at_str = request.session.get('test_started_at')
+
+    if not questions or not correct_answers or not started_at_str:
+        messages.error(request, "Тест не найден. Начните заново.")
+        return redirect('start_test')
+
+    # Парсим ответы пользователя
+    user_answers = []
+    for i in range(10):
+        answer_str = request.POST.get(f'answer_{i}')
+        if answer_str is None or not answer_str.strip().isdigit():
+            messages.error(request, "Некорректный ответ.")
+            return redirect('start_test')
+        user_answers.append(int(answer_str))
+
+    # Подсчёт баллов
+    score = sum(1 for i, ans in enumerate(user_answers) if ans == correct_answers[i])
+
+    # Время прохождения
+    started_at = timezone.datetime.fromisoformat(started_at_str)
+    total_time_seconds = int((timezone.now() - started_at).total_seconds())
+
+    # Сохраняем результат в БД
+    TestResult.objects.create(
+        user=request.user,
+        score=score,
+        total_time_seconds=total_time_seconds,
+        questions=questions,
+        answers=user_answers
+    )
+
+    # Очищаем сессию
+    del request.session['test_questions']
+    del request.session['test_correct_answers']
+    del request.session['test_started_at']
+
+    # Сообщение и перенаправление
+    if score == 10:
+        messages.success(request, f"🏆 Отлично! 10/10 за {total_time_seconds} секунд!")
+    else:
+        messages.info(request, f"Вы набрали {score}/10 за {total_time_seconds} секунд.")
+
+    return redirect('test_results')
+
+@login_required
+def test_results(request):
+    """
+    Последние результаты пользователя
+    """
+    results = TestResult.objects.filter(user=request.user).order_by('-started_at')[:5]
+    return render(request, 'test/results.html', {'results': results})
+
+@login_required
+def leaderboard(request):
+    """
+    Топ-10 по успешным тестам и по минимальному времени
+    """
+    # Топ по количеству идеальных тестов (10/10)
+    top_by_perfect = (
+        TestResult.objects.filter(score=10)
+        .values('user__username')
+        .annotate(perfect_count=Count('id'))
+        .order_by('-perfect_count')[:10]
+    )
+
+    # Топ по минимальному времени среди идеальных тестов
+    top_by_fastest = (
+        TestResult.objects.filter(score=10)
+        .values('user__username')
+        .annotate(min_time=Min('total_time_seconds'))
+        .order_by('min_time')[:10]
+    )
+
+    return render(request, 'test/leaderboard.html', {
+        'top_by_perfect': top_by_perfect,
+        'top_by_fastest': top_by_fastest,
+    })

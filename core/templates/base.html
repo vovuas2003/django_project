@@ -22,6 +22,15 @@
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'start_test' %}">Тест</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'test_results' %}">Мои результаты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'leaderboard' %}">Топ</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'profile' %}">Профиль</a>
                         </li>
                         <li class="nav-item">

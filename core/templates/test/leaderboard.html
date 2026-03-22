@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Топ пользователей — MathMaster{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <h3>🏆 Топ по идеальным тестам (10/10)</h3>
+    <table class="table table-striped">
+      <thead><tr><th>Пользователь</th><th>Идеальных тестов</th></tr></thead>
+      <tbody>
+        {% for user in top_by_perfect %}
+          <tr><td>{{ user.user__username }}</td><td>{{ user.perfect_count }}</td></tr>
+        {% empty %}
+          <tr><td colspan="2">Нет данных</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-6">
+    <h3>⚡ Топ по скорости (среди идеальных)</h3>
+    <table class="table table-striped">
+      <thead><tr><th>Пользователь</th><th>Мин. время (с)</th></tr></thead>
+      <tbody>
+        {% for user in top_by_fastest %}
+          <tr><td>{{ user.user__username }}</td><td>{{ user.min_time }}</td></tr>
+        {% empty %}
+          <tr><td colspan="2">Нет данных</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<a href="{% url 'home' %}" class="btn btn-outline-secondary mt-4">Назад</a>
+{% endblock %}

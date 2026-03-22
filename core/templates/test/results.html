@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Мои результаты — MathMaster{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h3>📊 Последние результаты</h3>
+    {% if results %}
+      <ul class="list-group">
+        {% for result in results %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ result.score }}/10 — {{ result.total_time_seconds }}c</span>
+            <span class="text-muted">{{ result.started_at|date:"d.m.Y H:i" }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-muted">Вы ещё не проходили тесты.</p>
+    {% endif %}
+    <a href="{% url 'start_test' %}" class="btn btn-primary mt-3">Начать новый тест</a>
+  </div>
+</div>
+{% endblock %}
