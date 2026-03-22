@@ -62,23 +62,40 @@ def logout_view(request):
 @login_required
 def profile(request):
     """
-    Страница профиля с статистикой
+    Страница профиля с расширенной статистикой
     """
     profile_to_render = request.user.userprofile
+
+    # Общие метрики
     total_tests = TestResult.objects.filter(user=request.user).count()
     perfect_tests = TestResult.objects.filter(user=request.user, score=10).count()
-    avg_time = TestResult.objects.filter(user=request.user, score=10).aggregate(
-        avg=Avg('total_time_seconds')
-    )['avg'] or 0
 
-    # Последние 3 результата
+    # Процент идеальных тестов (с защитой от деления на ноль)
+    perfect_percentage = (
+        round((perfect_tests / total_tests) * 100, 1) if total_tests > 0 else 0
+    )
+
+    # Статистика по успешным тестам (score == 10)
+    successful_tests = TestResult.objects.filter(user=request.user, score=10)
+
+    min_time_perfect = successful_tests.aggregate(min=Min('total_time_seconds'))['min'] or 0
+    avg_time_perfect = successful_tests.aggregate(avg=Avg('total_time_seconds'))['avg'] or 0
+
+    # Среднее время последних 5 успешных тестов
+    last_5_perfect = successful_tests.order_by('-started_at')[:5]
+    avg_last_5_perfect = last_5_perfect.aggregate(avg=Avg('total_time_seconds'))['avg'] or 0
+
+    # Последние 3 результата (все, не только идеальные)
     recent_results = TestResult.objects.filter(user=request.user).order_by('-started_at')[:3]
 
     return render(request, 'profile.html', {
         'profile': profile_to_render,
         'total_tests': total_tests,
         'perfect_tests': perfect_tests,
-        'avg_time': round(avg_time, 1),
+        'perfect_percentage': perfect_percentage,
+        'min_time_perfect': min_time_perfect,
+        'avg_time_perfect': round(avg_time_perfect, 1),
+        'avg_last_5_perfect': round(avg_last_5_perfect, 1),
         'recent_results': recent_results,
     })
 

@@ -1,38 +1,66 @@
 {% extends 'base.html' %}
 {% block title %}Профиль — MathMaster{% endblock %}
-
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-md-8">
     <div class="card p-4">
       <h3 class="text-center mb-4">Мой профиль</h3>
-
       <p><strong>Имя пользователя:</strong> {{ profile.user.username }}</p>
       <p><strong>Присоединился:</strong> {{ profile.joined_at|date:"d.m.Y" }}</p>
-
       <hr>
 
-      <!-- Статистика (три карточки в ряд) -->
-      <div class="row text-center mb-4">
-        <div class="col-md-4">
-          <div class="badge bg-primary rounded-pill p-3 w-100">
-            <div class="fs-4 fw-bold">{{ total_tests }}</div>
-            <div class="small text-muted">Всего тестов</div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="badge bg-success rounded-pill p-3 w-100">
-            <div class="fs-4 fw-bold">{{ perfect_tests }}</div>
-            <div class="small text-muted">Идеальных (10/10)</div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="badge bg-info rounded-pill p-3 w-100">
-            <div class="fs-4 fw-bold">{{ avg_time }}c</div>
-            <div class="small text-muted">Ср. время (идеал)</div>
-          </div>
-        </div>
-      </div>
+<!-- Статистика — 6 карточек в два ряда по 3 -->
+<div class="row text-center mb-4 g-4">
+  <!-- Ряд 1: Общая статистика -->
+  <div class="col-md-4">
+    <div class="badge bg-primary rounded-pill p-4 w-100">
+      <div class="fs-4 fw-bold mb-1">{{ total_tests }}</div>
+      <div class="fs-6 text-muted mt-0">Всего<br>тестов</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="badge bg-info rounded-pill p-4 w-100">
+      <div class="fs-4 fw-bold mb-1">{{ perfect_tests }}</div>
+      <div class="fs-6 text-muted mt-0">Идеальных<br>(10/10)</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="badge bg-success rounded-pill p-4 w-100">
+      <div class="fs-4 fw-bold mb-1">{{ perfect_percentage }}%</div>
+      <div class="fs-6 text-muted mt-0">Процент<br>идеальных</div>
+    </div>
+  </div>
+</div>
+
+<!-- Подзаголовок между рядами -->
+<div class="text-center mb-4">
+  <h6 class="text-muted fw-semibold">
+    Статистика времени по идеальным тестам (10/10)
+  </h6>
+</div>
+
+<!-- Ряд 2: Статистика времени по идеальным тестам -->
+<div class="row text-center g-4">
+  <div class="col-md-4">
+    <div class="badge bg-danger rounded-pill p-4 w-100">
+      <div class="fs-4 fw-bold mb-1">{{ min_time_perfect }} c</div>
+      <div class="fs-6 text-muted mt-0">Рекорд</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="badge bg-warning rounded-pill p-4 w-100">
+      <div class="fs-4 fw-bold mb-1">{{ avg_time_perfect }} c</div>
+      <div class="fs-6 text-muted mt-0">Среднее</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="badge bg-secondary rounded-pill p-4 w-100">
+      <div class="fs-4 fw-bold mb-1">{{ avg_last_5_perfect }}c</div>
+      <div class="fs-6 text-muted mt-0">Среднее<br>(последние 5)</div>
+    </div>
+  </div>
+</div>
+
 
       <!-- Последние результаты -->
       <h5 class="mb-3">📊 Последние результаты</h5>
@@ -62,7 +90,7 @@
       <div class="d-grid gap-2">
         <a href="{% url 'start_test' %}" class="btn btn-success btn-lg">🚀 Начать тест</a>
         <a href="{% url 'test_results' %}" class="btn btn-outline-secondary">📋 Все результаты</a>
-        <a href="{% url 'leaderboard' %}" class="btn btn-outline-primary">🏆 Топ пользователей</a>
+        <a href="{% url 'leaderboard' %}" class="btn btn-outline-primary">🏆 Топ</a>
       </div>
 
       <!-- Смена пароля -->

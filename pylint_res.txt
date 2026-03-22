@@ -6,5 +6,5 @@ core\models.py:2:0: E5142: User model imported from django.contrib.auth.models (
 core\tests.py:1:0: W0611: Unused TestCase imported from django.test (unused-import)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.36/10 (previous run: 9.36/10, +0.00)
+Your code has been rated at 9.38/10 (previous run: 9.38/10, +0.00)
 
