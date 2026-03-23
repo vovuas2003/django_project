@@ -20,4 +20,4 @@
 
 Команда pylint_run.bat запустит pylint с нужными опциями, сохранит результат в файл pylint_res.txt и выведет его содержимое на экран. Выключены проверки C0114: Missing module docstring (missing-module-docstring) и C0115: Missing class docstring (missing-class-docstring), потому что при чистом старте Django проекта эти docstring не создаются. Структура проекта стандартизована (диктуется фреймворком), docstring для своего кода я создам при необходимости.
 
-Текущая оценка pylint: 9.35
+Текущая оценка pylint: 9.38
