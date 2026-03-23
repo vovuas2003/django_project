@@ -204,7 +204,7 @@ def test_results(request):
     """
     Последние результаты пользователя
     """
-    results = TestResult.objects.filter(user=request.user).order_by('-started_at')[:5]
+    results = TestResult.objects.filter(user=request.user).order_by('-started_at')[:10]
     return render(request, 'test/results.html', {'results': results})
 
 @login_required
