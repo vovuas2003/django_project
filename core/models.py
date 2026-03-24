@@ -30,6 +30,22 @@ class TestResult(models.Model):
         """
         return self.score == 10
 
+    def get_questions_with_answers(self):
+        """
+        Возвращает список вопросов с ответами пользователя и правильными ответами
+        для отображения в детальной странице
+        """
+        return [
+            {
+                'a': q['a'],
+                'b': q['b'],
+                'user_answer': self.answers[i],
+                'correct_answer': q['a'] + q['b'],
+                'is_correct': self.answers[i] == q['a'] + q['b']
+            }
+            for i, q in enumerate(self.questions)
+        ]
+
     def __str__(self):
         return f"{self.user.username} - {self.score}/10 ({self.total_time_seconds} с)"
 

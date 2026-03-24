@@ -37,3 +37,12 @@ footer {
     color: #6c757d;
     font-size: 0.9rem;
 }
+
+.list-group-item-danger {
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+}
+
+.badge.bg-success {
+    background-color: #198754;
+}

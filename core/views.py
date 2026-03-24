@@ -2,7 +2,7 @@ import io
 import base64
 import random
 #import json
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
@@ -11,6 +11,7 @@ from django.contrib.auth import update_session_auth_hash
 #from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Avg, Count, Min
+from django.core.paginator import Paginator
 
 import matplotlib
 matplotlib.use('Agg') # режим без GUI
@@ -202,10 +203,27 @@ def submit_test(request):
 @login_required
 def test_results(request):
     """
-    Последние результаты пользователя
+    Все результаты пользователя с пагинацией
     """
-    results = TestResult.objects.filter(user=request.user).order_by('-started_at')[:10]
-    return render(request, 'test/results.html', {'results': results})
+    results_list = TestResult.objects.filter(user=request.user).order_by('-started_at')
+    paginator = Paginator(results_list, 10)  # 10 результатов на страницу
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'test/results.html', {'page_obj': page_obj})
+
+@login_required
+def test_detail(request, test_id):
+    """
+    Детальный просмотр одного теста
+    """
+    test_result = get_object_or_404(TestResult, id=test_id, user=request.user)
+    questions_data = test_result.get_questions_with_answers()
+
+    return render(request, 'test/test_detail.html', {
+        'test_result': test_result,
+        'questions_data': questions_data
+    })
 
 @login_required
 def leaderboard(request):

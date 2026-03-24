@@ -14,4 +14,6 @@ urlpatterns = [
     path('test/results/', views.test_results, name='test_results'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     path('perfect-trend/', views.perfect_trend, name='perfect_trend'),
+    path('results/', views.test_results, name='test_results'),
+    path('results/<int:test_id>/', views.test_detail, name='test_detail'),
 ]

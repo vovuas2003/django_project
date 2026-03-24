@@ -16,12 +16,12 @@ core\tests.py:1:0: W0611: Unused TestCase imported from django.test (unused-impo
 ************* Module core.urls
 core\urls.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 ************* Module core.views
-core\views.py:288:0: C0301: Line too long (108/100) (line-too-long)
+core\views.py:306:0: C0301: Line too long (108/100) (line-too-long)
 core\views.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-core\views.py:17:0: C0413: Import "import matplotlib.pyplot as plt" should be placed at the top of the module (wrong-import-position)
-core\views.py:19:0: C0413: Import "from .models import UserProfile, TestResult" should be placed at the top of the module (wrong-import-position)
-core\views.py:237:0: R0914: Too many local variables (19/15) (too-many-locals)
+core\views.py:18:0: C0413: Import "import matplotlib.pyplot as plt" should be placed at the top of the module (wrong-import-position)
+core\views.py:20:0: C0413: Import "from .models import UserProfile, TestResult" should be placed at the top of the module (wrong-import-position)
+core\views.py:255:0: R0914: Too many local variables (19/15) (too-many-locals)
 
 ------------------------------------------------------------------
-Your code has been rated at 8.96/10 (previous run: 9.38/10, -0.42)
+Your code has been rated at 9.00/10 (previous run: 9.40/10, -0.40)
 
