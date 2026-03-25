@@ -1,14 +1,16 @@
+"""
+Обработка запросов
+"""
+
 import io
 import base64
 import random
-#import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-#from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Avg, Count, Min
 from django.core.paginator import Paginator

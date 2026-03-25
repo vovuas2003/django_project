@@ -1,3 +1,7 @@
+"""
+Соответствие ссылок и функций-обработчиков
+"""
+
 from django.urls import path
 from . import views
 
